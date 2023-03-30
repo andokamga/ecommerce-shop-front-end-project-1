@@ -1,0 +1,63 @@
+<div class=" container">
+    <div class="row mt">
+        <div class="col-md-2">
+            <div class="panel panel-default">
+                <div class="panel-heading text-center"><strong>products filter</strong></div>
+                <div class="panel-body">
+                  <div class="card">
+                    <div class="card-header text-center bg-primary text-white"><strong>Categories</strong></div>
+                    <div class="card-body">
+                      <ul *ngIf="shopCat" class="list-group">
+                        <li [ngClass]="categories.idCategory==currentCat?'active':''" *ngFor="let categories of shopCat" class="list-group-item text-center clickable" (click)="onGetProductByCategory(products?.content[0].shop.idShop,categories.idCategory,0)">{{categories.categoryName}}</li>
+                      </ul>
+                    </div>
+                  </div>
+                  <div *ngIf="shopBrand" class="card">
+                    <div class="card-header text-center bg-primary text-white"><strong>Brands</strong></div>
+                    <div class="card-body">
+                      <ul  class="list-group">
+                        <li [ngClass]="brands.idBrand==currentBrand?'active':''" *ngFor="let brands of shopBrand " class="list-group-item text-center clickable" (click)="onGetProductByBrand(products?.content[0].shop.idShop,brands.idBrand,0)">{{brands.brandName}}</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+        </div>
+        <div class="col-md-10">
+            <div class="panel panel-default">
+                <div class="panel-heading text-center"> <strong>set of product of {{products?.content[0].shop.shopName}} shop</strong></div>
+                <div class="panel-body">
+                  <div class="row" *ngIf="products">
+                    <div *ngFor="let product of products.content">
+                      <div class="col-md-6">
+                        <div class="panel panel-default">
+                          <div class="panel-heading text-center"><strong>{{product.productName}}</strong></div>
+                          <div class="panel-body">
+                            <img src="{{productService.host+'/api/products/image/'+product.idProduct}}" class="img-rounded clickable"/>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="text-center">
+                 <nav aria-label="Page navigation example">
+                  <ul class="pagination">
+                    <li  class="page-item" [ngClass]="0==currentPage?'disabled':''" *ngIf="totalPages">
+                      <a class="clickable" (click)="onGoToPage(currentPage-1)" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                      </a>
+                    </li>
+                    <li [ngClass]="i==currentPage?'active':''" class="page-item" *ngFor="let page of pages; let i= index"><a class="clickable" (click)="onGoToPage(i)">{{i+1}}</a></li>
+                    <li class="page-item" [ngClass]="totalPages-1==currentPage?'disabled':''" *ngIf="totalPages">
+                      <a class="clickable" (click)="onGoToPage(currentPage+1)" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                      </a>
+                    </li>
+                  </ul>
+                 </nav>
+                </div>
+              </div>
+        </div>
+    </div>
+</div>
