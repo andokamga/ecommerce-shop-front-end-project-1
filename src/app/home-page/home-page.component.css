@@ -8,4 +8,11 @@ img{
   .clickable{
     cursor: pointer;
   }
+  .p{
+    padding: 0px;
+    margin: 0px;
+  }
+  .mt2{
+    margin-top: 13px;
+  }
   

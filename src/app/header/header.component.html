@@ -1,0 +1,54 @@
+ <nav class="navbar navbar-inverse navbar-fixed-top ">
+    <div class="container-fluid navbar-fixed-top">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand"> <strong>E-comShop</strong></a>
+      </div>
+      <div  class="collapse navbar-collapse" id="myNavbar">
+        <ul  class="nav navbar-nav">
+          <li ><a class="fa fa-home icon clickable" (click)="backHome()"><strong>home</strong></a></li>
+          <li class="nav-item dropdown">
+            <a class="nav-link clickable" data-toggle="dropdown" data-bs-toggle="dropdown" (click)="onGetTown()"><strong>Town</strong>
+            <span class="caret"></span></a>
+            <ul class="dropdown-menu" *ngIf="town">
+                  <li><a class="clickable dropdown-item" *ngFor="let towns of town" (click)="onGetShop(towns)" >{{towns.townName}}</a>
+            </ul>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link clickable" data-toggle="dropdown" data-bs-toggle="dropdown"> <strong>Shop</strong>
+            <span class="caret"></span></a>
+            <ul class="dropdown-menu" *ngIf="shops">
+                  <li><a class="clickable dropdown-item" *ngFor="let shop of shops" (click)="onGetProduct(shop)" >{{shop.shopName}}</a></li>
+            </ul>
+          </li>
+        </ul>
+        <form  class="navbar-form navbar-left"  (ngSubmit)=" onSearch()">
+          <div class="input-group">
+            <input type="text" name="search" ngModel required class="form-control" placeholder="Search products" [(ngModel)]="search">
+            <div class="input-group-btn">
+              <button class="btn btn-default" type="submit ">
+                <i class="glyphicon glyphicon-search"></i>
+              </button>
+            </div>
+          </div>
+        </form>
+        <ul class="nav navbar-nav navbar-right" *ngIf="!isAuthetificated">
+          <li><a routerLink="register" href="#"><span class="glyphicon glyphicon-user "></span><strong>Sign Up</strong></a></li>
+          <li><a routerLink="login" href="#"><span class="glyphicon glyphicon-log-in"></span><strong> Login</strong></a></li>
+        </ul>
+        <ul class="nav navbar-nav navbar-right" *ngIf="isAuthetificated">
+          <li >
+            <a routerLink="register" href="#" *ngIf="userApp" >
+              <img class="img-circle img" src="assets/images/unknown.jpg" width="26"> 
+              <strong>&nbsp;{{userApp.userName}}</strong>
+            </a>
+          </li>
+          <li><a (click)="handLogout()"><span class="fa fa-sign-out icon clickable"></span></a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>

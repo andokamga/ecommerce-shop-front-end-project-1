@@ -1,0 +1,33 @@
+<div class="mt">
+  <div class="panel-group" id="accordion">
+    <div class="panel panel-default" *ngFor="let m of menu">
+      <div class="panel-heading " id="menu{{m.id}}">
+        <h2 class="panel-title text-center">
+          <button class="btn" data-toggle="collapse" [attr.data-target]="'#collapse'+m.id" data-parent="#accordion">
+            <i class="{{m.icon}}"></i>&nbsp;
+            <strong>{{m.title}} </strong>        
+          </button>
+        </h2>
+      </div>
+      <div id="collapse{{m.id}}" class="panel-collapse collapse" [attr.aria.labelledby]="'menu'+m.id" >
+        <div class="panel-body text-center clickable" *ngFor="let sousMenu of m.sousMenu" (click)="navigateByUrl(sousMenu.url)">
+          <i class="{{sousMenu.icon}}"  (click)="navigateByUrl(sousMenu.url)"></i>&nbsp;{{sousMenu.title}}
+        </div>
+      </div>
+    </div>
+    <div class="panel panel-default" *ngFor="let m of menu2">
+      <div class="panel-heading " id="menu{{m.id}}">
+        <h2 class="panel-title text-center">
+          <button class="btn" data-toggle="collapse" [attr.data-target]="'#collapse'+m.id" data-parent="#accordion">
+            <i class="{{m.icon}}"></i>&nbsp;
+            <strong>{{m.title}} </strong>        
+          </button>
+        </h2>
+      </div>
+      <div id="collapse{{m.id}}" class="panel-collapse collapse" [attr.aria.labelledby]="'menu'+m.id" >
+        <div class="panel-body text-center clickable" *ngFor="let sousMenu of m.sousMenu">
+          <i class="{{sousMenu.icon}}"></i>&nbsp;{{sousMenu.title}}
+        </div>
+      </div>
+    </div>
+</div> <!-- end container -->

@@ -1,6 +1,7 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild,OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { ShopService } from './services/shop.service';
+import { AuthentificationService } from './services/authentification.service';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -15,7 +16,10 @@ export class AppComponent {
   public currentShops:any;
   public isSearch:number=0;
   public shops:any
-  constructor(public shopService: ShopService) { }
+  constructor(public shopService: ShopService, private authService:AuthentificationService) { }
+  ngOnInit(): void {
+    this.authService.loadAuthentificatedUserFromLocalStorage();
+  }
   onSearch(){
     this.fromSearch=this.search;
     console.log(this.search);

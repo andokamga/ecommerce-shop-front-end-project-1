@@ -1,5 +1,5 @@
 export class UrlData{
-    public idUser? : number;
+    public idUser?: number;
     public idRole?: number;
     public idShop?: number;
     public idProduct?: number;

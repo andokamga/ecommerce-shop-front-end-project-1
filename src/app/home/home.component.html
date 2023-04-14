@@ -1,0 +1,4 @@
+<app-header [(search)]="fromSearch" [(isHome)]="isHome" [(currentShops)]="currentShops"></app-header>
+<app-home-page *ngIf ="!isAuthetificated" [(search)]="fromSearch" [isHome]="isHome" [(currentShops)]="currentShops"></app-home-page>
+<app-dashboard *ngIf ="isAuthetificated"></app-dashboard>
+<app-footer></app-footer>

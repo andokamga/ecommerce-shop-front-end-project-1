@@ -1,4 +1,4 @@
-import { Component, OnInit, Input,OnChanges, SimpleChanges } from '@angular/core';
+import { Component, OnInit, Input,OnChanges, SimpleChanges,Output,EventEmitter } from '@angular/core';
 import { ProductService } from '../services/product.service';
 import { UrlData } from '../model/urlData.modul';
 
@@ -10,11 +10,15 @@ import { UrlData } from '../model/urlData.modul';
 export class HomePageComponent implements OnInit, OnChanges {
   public urlData:UrlData = new UrlData();
   @Input()
-  public search:string='';
+  public search!:string;
+  @Output()
+  public searchChange:EventEmitter<any>= new EventEmitter<any>();
   @Input()
   public isHome!:number;
   @Input()
   public currentShops!:any;
+  @Output()
+  public currentShopsChange:EventEmitter<any>= new EventEmitter<any>();
   public disable:boolean=true
   public products:any;
   public shopCat: any;
@@ -43,8 +47,12 @@ export class HomePageComponent implements OnInit, OnChanges {
       console.log(this.search);
       this.onSearchProduct(this.search,0);
     }else if(changes['isHome']&& changes['isHome'].currentValue){
+      this.search="";
+      this.searchChange.emit(this.search);
       this.onBackHomeShop();
     }else if(changes['currentShops']&& changes['currentShops'].currentValue){
+      this.search="";
+      this.searchChange.emit(this.search);
       this.onChangeShop(this.currentShops.idShop,0);
     }
   }
@@ -68,6 +76,8 @@ export class HomePageComponent implements OnInit, OnChanges {
           this.products = data;
           console.log(data);
           this.currentShop = this.products.content[0].shop.idShop;
+          this.currentShops = this.products.content[0].shop;
+          this.currentShopsChange.emit(this.currentShops);
           this.pageSize= this.products.numberOfElements;
           this.currentPage = this.products.number;
           this.totalPages = this.products.totalPages;
@@ -149,6 +159,8 @@ export class HomePageComponent implements OnInit, OnChanges {
     this.search = '';
     this.currentPage=0;
     this.urlData.page=this.currentPage
+    this.search="";
+    this.searchChange.emit(this.search);
     this.productService.getProductByCategory(this.urlData)
         .subscribe((data)=>{
           this.products=data;
@@ -166,6 +178,8 @@ export class HomePageComponent implements OnInit, OnChanges {
     this.search = '';
     this.currentBrand=idBrand;
     this.currentPage=0;
+    this.search="";
+    this.searchChange.emit(this.search);
     this.productService.getProductByBrand(this.urlData)
         .subscribe((data)=>{
           this.products=data;
