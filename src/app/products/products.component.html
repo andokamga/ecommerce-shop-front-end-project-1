@@ -1,0 +1,274 @@
+<div *ngIf="mode==0">
+    <div *ngIf="stetusAnswer" class="alert {{stetusAnswer}} alert-dismissible">
+        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+        <strong>{{stetusMessage}}</strong> 
+    </div>
+    <div class="row panel panel-info mg">
+        <div class="row pg">
+            <div class="col-md-6">
+                <h4><strong>Product list of {{productService.currentShop?.shopName}}</strong></h4>
+            </div>
+            <div class="col-md-6 text-right">
+                <div class="col-md-4 mbt">
+                    <button class="btn btn-primary" (click)="onCreateNewProduct()"><strong><i class="fa fa-plus-square"></i>&nbsp; New product</strong></button>
+                </div>
+                <div class="col-md-4 mbt">
+                    <button class="btn btn-success"><strong><i class="fa fa-print"></i>&nbsp;Print product list</strong></button>
+                </div>
+                <div class="col-md-4 mbt">
+                    <button class="btn btn-warning"><strong><i class="fa fa-cloud-upload"></i>&nbsp;imports</strong></button>
+                </div>
+            </div>
+        </div>
+        <div class="row panel panel-info mg text-center"  *ngFor="let product of products.content">
+            <div class="col-md-2 img panel panel-info m-0">
+                <img src="{{productService.host+'/api/products/image/'+product.idProduct}}">
+            </div>
+            <div class="col-md-3 panel panel-info m-0 h-70">
+                <strong >Name:</strong>{{product.productName}}
+                <br>
+                <strong>Price:</strong>{{product.productPrice}} Fafc
+                <br>
+                <strong>Quantity:</strong>{{product.productQuantity}}
+            </div>
+            <div class="col-md-3 panel panel-info m-0 h-70">
+                <div class="col-md-6 mbt">
+                    <button class="btn btn-warning" data-toggle="modal" data-target="#myModal1"><strong><i class="fa fa-plus-square"></i>&nbsp; Stock</strong></button>
+                    <div id="myModal1" class="modal fade" role="dialog">
+                        <div class="modal-dialog">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <button type="button" class="close" data-dismiss="modal">&times;</button>
+                              <h4 class="modal-title">Stock product</h4>
+                            </div>
+                            <div class="modal-body">
+                                <div class=" panel panel-info mg pg">
+                                    <form [formGroup]="stockFormGroup"  (ngSubmit) ="stoctProduct(product.idProduct)" class="" >
+                                        <input type="number" formControlName ="stock" class="form-control"  placeholder="Enter the product quantity " required>
+                                        <small *ngIf="stockFormGroup.controls['stock'].errors && stockFormGroup.controls['stock'].touched" class="text-danger">
+                                            {{getErrorMessage('stock',stockFormGroup.controls['stock'].errors)}}
+                                        </small>
+                                        <br>
+                                        <div class="text-right">
+                                            <button [disabled]="!stockFormGroup.valid" class="btn btn-success" type="submit" data-dismiss="modal" (click)="stoctProduct(product.idProduct)">&nbsp;Stock</button>&nbsp;&nbsp;&nbsp;
+                                            <button class="btn btn-default" type="button" data-dismiss="modal">&nbsp;Canced </button>
+                                        </div>
+                                    </form> 
+                                </div>  
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                </div>
+                <div class="col-md-6 mbt">
+                    <button class="btn bg-primary" data-toggle="modal" data-target="#myModal2" (click)="productQty(product.quantity)"><strong><i class=""></i>&nbsp;Destock</strong></button>
+                    <div id="myModal2" class="modal fade" role="dialog">
+                        <div class="modal-dialog">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <button type="button" class="close" data-dismiss="modal">&times;</button>
+                              <h4 class="modal-title">destock product</h4>
+                            </div>
+                            <div class="modal-body">
+                                <div class=" panel panel-info mg pg">
+                                    <form [formGroup]="destockFormGroup"  (ngSubmit) ="destoctProduct(product)" class="" >
+                                        <input type="number" formControlName ="destock" class="form-control"  placeholder="Enter the product quantity " required>
+                                        <small *ngIf="destockFormGroup.controls['destock'].errors && destockFormGroup.controls['destock'].touched" class="text-danger">
+                                            {{getErrorMessage('destock',destockFormGroup.controls['destock'].errors)}}
+                                        </small>
+                                        <br>
+                                        <div class="text-right">
+                                            <button  [disabled]="!destockFormGroup.valid" class="btn btn-success" type="submit" data-dismiss="modal" (click)="destoctProduct(product)">&nbsp;destock</button>&nbsp;&nbsp;&nbsp;
+                                            <button class="btn btn-default" type="button" data-dismiss="modal">&nbsp;Canced </button>
+                                        </div>
+                                    </form> 
+                                </div>  
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                </div>
+            </div>
+            <div class="col-md-4 panel panel-info m-0 h-70">
+                
+                <div class="col-md-4 mbt">
+                    <button class="btn btn-info"><i class="fa fa-newspaper-o"></i></button>
+                </div>
+                <div class="col-md-4 mbt">
+                    <button class="btn btn-primary" (click)="onUpdateProduct(product.idProduct)"><i class="fa fa-pencil"></i></button>
+                </div>
+                <div class="col-md-4 mbt">
+                    <button class="btn btn-danger" data-toggle="modal" data-target="#myModal"> <i class="fa fa-trash-o"></i></button>
+                    <div id="myModal" class="modal fade" role="dialog">
+                        <div class="modal-dialog">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <button type="button" class="close" data-dismiss="modal">&times;</button>
+                              <h4 class="modal-title">delete product</h4>
+                            </div>
+                            <div class="modal-body">
+                              <p>do you really want to remove?</p>
+                            </div>
+                            <div class="modal-footer">
+                              <button type="submit" class="btn btn-success" data-dismiss="modal" (click)="onDeleteProduct(product.idProduct)">Delete</button>
+                              <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="text-center">
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination">
+                      <li  class="page-item" [ngClass]="0==homePage.currentPage?'disabled':''" *ngIf="homePage.totalPages">
+                        <a class="clickable" (click)="homePage.onGoToPage(homePage.currentPage-1)" aria-label="Previous">
+                          <span aria-hidden="true">&laquo;</span>
+                        </a>
+                      </li>
+                      <li [ngClass]="i==homePage.currentPage?'active':''" class="page-item" *ngFor="let page of homePage.pages; let i=index"><a class="clickable" (click)="homePage.onGoToPage(i)">{{i+1}}</a></li>
+                      <li class="page-item" [ngClass]="homePage.totalPages-1==homePage.currentPage?'disabled':''" *ngIf="homePage.totalPages">
+                        <a class="clickable" (click)="homePage.onGoToPage(homePage.currentPage+1)" aria-label="Next">
+                          <span aria-hidden="true">&raquo;</span>
+                        </a>
+                      </li>
+                    </ul>
+                   </nav> 
+            </div>
+        </div>
+    </div>
+</div>
+<div *ngIf="mode==1" >
+    <div *ngIf="stetusAnswer" class="alert {{stetusAnswer}} alert-dismissible">
+        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+        <strong>{{stetusMessage}}</strong> 
+    </div>
+    <div class="row panel panel-info mg pg">
+        <div class="col-md-12">
+            <h1><span *ngIf="!addPhoto" class="badge prix clickable" (click)="onSelectFile()">&nbsp;<i class="fa fa-plus-square"></i>&nbsp;</span></h1>
+            <h1><span *ngIf="addPhoto" class="badge file clickable"><input type="file" class="file-input" (change)="onSelectImage($event)" #fileUpload></span></h1>
+            <img src="{{imageLink}}" class="img-circle clickable" width="25" (click)="onSelectFile()">
+        </div>
+        <div class="row">
+            <div class="col-md-2">
+                <mat-progress-bar class="progress-bar" mode="determinate" [value]="progress" *ngIf="progress"></mat-progress-bar>
+            </div>
+        </div>
+        <div class="row mg text-center">
+            <h3>product information</h3>
+        </div>
+        <div class=" panel panel-info mg pg">
+            <form [formGroup]="productFormGroup"  (ngSubmit) ="handleProdut()" class="" >
+                <div class="row mt">
+                    <div class="col-md-6 mg mr">
+                        <input type="text" formControlName ="productName" class="form-control"  placeholder="Enter the product name" required>
+                        <small *ngIf="productFormGroup.controls['productName'].errors && productFormGroup.controls['productName'].touched" class="text-danger">
+                            {{getErrorMessage('product name',productFormGroup.controls['productName'].errors)}}
+                        </small>
+                    </div>
+                    <div class="col-md-6 mg mr">
+                        <input type="number" formControlName ="productPrice" class="form-control" placeholder="Enter the product price"  required>
+                        <small *ngIf="productFormGroup.controls['productPrice'].errors && productFormGroup.controls['productPrice'].touched" class="text-danger">
+                            {{getErrorMessage('product price',productFormGroup.controls['productPrice'].errors)}}
+                        </small>
+                    </div>
+                </div>
+                <div class="row mt">
+                    <div class="col-md-6 mg mr">
+                        <input type="number" formControlName ="reductionPrince" class="form-control"  placeholder="Enter the reduction price" required>
+                    </div>
+                    <div class="col-md-6 mg mr">
+                        <input type="number" formControlName ="productQuantity" class="form-control" placeholder="Enter the product quantity"  required>
+                    </div>
+                </div>
+                <div class="row mt">
+                    <div class="col-md-6 mg mr">
+                        <mat-form-field appearance="fill">
+                            <mat-label>select one brand</mat-label>
+                            <mat-select formControlName="brand">
+                                <mat-option>nome</mat-option>
+                                <mat-option *ngFor="let brand of shopBrand" [value]="brand.idBrand">{{brand.brandName}}</mat-option>
+                            </mat-select>
+                          </mat-form-field>
+                    </div>
+                    <div class="col-md-6 mg mr">
+                        <!--<select name="profession"  class="c-form-profession form-control" id="c-form-profession" placeholder="aimz" formControlName="category">
+                            <option value="Your profession...">select one category</option>
+                            <option value="Web design">Web design</option>
+                            <option value="SEO">SEO</option>
+                            <option value="Marketing">Marketing</option>
+                        </select>
+                        <select formControlName="category">
+                            <option [value]="null" disabled>Select Country</option>
+                            <option *ngFor="let category of homePage.shopCat" [value]="category.idCategory">{{category.categoryName}}</option>
+                          </select>-->
+                          <mat-form-field appearance="fill">
+                            <mat-label>select one category</mat-label>
+                            <mat-select formControlName="category">
+                                <mat-option>nome</mat-option>
+                                <mat-option *ngFor="let category of shopCat" [value]="category.idCategory">{{category.categoryName}}</mat-option>
+                            </mat-select>
+                          </mat-form-field>
+                    </div>
+                </div>
+                <div class="row mt">
+                    <div class="col-md-6 mg mr">
+                        <textarea class="form-control rounded-0" id="" formControlName="description" rows="4" placeholder="enter the product description"></textarea>
+                    </div>
+                    <div class="col-md-6 mg mr">
+                        <div class="row">
+                            <label class="col-md-5">Product disponiblility</label>
+                            <div class="col-md-7">
+                              <div class="form-check">
+                                <input class="form-check-input" type="radio" formControlName="available"  id="gridRadios1" value="true">
+                                    &nbsp; Available
+                              </div>
+                              <div class="form-check">
+                                <input class="form-check-input" type="radio" formControlName="available"  id="gridRadios2" value="false">
+                                    &nbsp;Unavailable
+                              </div>
+                            </div>
+                          </div>
+                    </div>
+                </div>
+                <div class="text-right">
+                    <button [disabled]="!productFormGroup.valid" *ngIf="action==1" class="btn btn-success fa fa-plus-square" type="submit">&nbsp;update</button>&nbsp;&nbsp;&nbsp;
+                    <button [disabled]="!productFormGroup.valid" *ngIf="action==0" class="btn btn-success fa fa-plus-square" type="submit">&nbsp;Save</button>&nbsp;&nbsp;&nbsp;
+                    <button class="btn btn-danger fa fa fa-check" type="button">&nbsp;Canced </button>
+                </div>
+              </form>   
+        </div>
+    </div>
+</div>
+<!--<div class="form-group" *ngIf="mode==1">
+    <label for="c-form-profession">
+        <span class="label-text">Profession:</span> 
+        <span class="contact-error"></span>
+    </label>
+    <select name="profession" class="c-form-profession form-control" id="c-form-profession" placeholder="aimz">
+        <option value="Your profession...">Your profession...</option>
+        <option value="Web design">Web design</option>
+        <option value="SEO">SEO</option>
+        <option value="Marketing">Marketing</option>
+    </select>
+</div>
+<button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Open Modal</button>
+<div id="myModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Update product</h4>
+      </div>
+      <div class="modal-body">
+        <p>Update product</p>
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-success">Update</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>-->

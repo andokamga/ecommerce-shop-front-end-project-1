@@ -3,7 +3,8 @@ import { ItemProduct } from "./itemproduct.model";
 
 export class Caddy{
     public name!: string;
-    public items: Map<number,ItemProduct> = new Map();
+    //public items: Map<number,ItemProduct> = new Map();
+    public items:Array<ItemProduct>=[];
     public client!: Client;
     constructor(name: string){
         this.name = name

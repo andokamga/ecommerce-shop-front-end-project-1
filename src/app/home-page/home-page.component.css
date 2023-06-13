@@ -15,4 +15,23 @@ img{
   .mt2{
     margin-top: 13px;
   }
+  .img1{
+    width: 40;
+    height: 40;
+    margin-top: 0%;
+  }
+  .border{
+    border-style:groove;
+    border: 1px solid;
+    border-radius: 40px;
+}
+.prix{
+  margin-top: -5px;
+  position: absolute;
+  right: 50px;
+}
+.mg{
+  margin: 10px;
+}
+
   

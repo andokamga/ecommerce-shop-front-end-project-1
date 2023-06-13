@@ -1,1 +1,51 @@
-<p>caddy works!</p>
+<div [ngClass]="!isAuthentificated?'container mt':''">
+    <div class="panel panel-default">
+        <div class="panel-body">
+          <ul class="nav nav-pills">
+            <!--<li>
+              <button (click)="onAddCaddy()" class="btn btn-danger">
+                <span class="glyphicon glyphicon-plus pull-right"></span>
+              </button>
+            </li>-->
+            <li [ngClass]="c.name==caddyService.currentCaddyName?'active':''" *ngFor="let c of caddyService.listCaddies">
+              <a class="btn" (click)="onSelectCaddy(c.name)">{{c.name}}</a>
+            </li>
+          </ul>
+        </div>
+    </div> 
+    <div class="panel panel-default" *ngIf="currentCaddy?.items">
+        <div class="panel-heading text-center"> <strong> caddy of {{currentCaddy?.name}}</strong></div>
+        <div class="panel-body">
+          <table class="table table-striped" >
+            <thead class="bg-info">
+              <tr>
+                <th>n item</th><th>Name</th><th>Quantity</th><th>Price</th><th></th>
+            </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of currentCaddy?.items let i= index">
+                <td *ngIf="item">{{i+1}}</td>
+                <td>{{item.product.productName}}</td>
+                <td>{{item.quatity}}</td>
+                <td>{{item.price|number:'0.2'}} fcfa</td>
+        
+                <td>
+                  <div *ngIf="item">
+                      <button  class="btn btn-danger" (click)="onRemoveProductFromCaddy(item)">
+                          <span class="glyphicon glyphicon-remove"></span>
+                        </button>
+                  </div>
+                </td>
+              </tr>
+              <br>
+              <tr class="bg-info">
+                <td colspan="4" class="bg-info"><strong>Total:</strong></td>
+                <td class="text-danger bg-info" ><strong>{{getTotal()|number:'0.2'}} fcfa</strong></td>
+              </tr>
+            </tbody>
+          </table>
+          <button class="btn btn-success" (click)="onNewOrder()">Order</button>
+        </div>
+      
+    </div>
+</div>

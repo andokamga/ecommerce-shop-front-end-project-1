@@ -1,0 +1,41 @@
+.mg{
+    margin: 3px;
+}
+.pg{
+    padding: 10px;
+}
+img{
+    width: 70px;
+    height: 70px;
+}
+.m-0{
+    margin: 0px;
+}
+.h-70{
+    height: 72px;
+}
+.mbt{
+    margin-top: 18px;
+}
+.mr{
+    margin-right: -10px;
+}
+.mt{
+    margin-top: 20px;
+}
+.pg{
+    padding: 20px;
+}
+.prix{
+    margin-top: 50px;
+    position: absolute;
+    margin-left: 40px; 
+}
+.clickable{
+    cursor: pointer;
+}
+.file{
+    margin-top: 35px;
+    position: absolute;
+    margin-left: 40px;  
+}

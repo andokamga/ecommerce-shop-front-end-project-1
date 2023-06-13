@@ -10,6 +10,12 @@ import { DetailProductComponent } from './detail-product/detail-product.componen
 import { AppComponent } from './app.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { AuthentificationGuard } from './guards/authentification.guard';
+import { CaddyComponent } from './caddy/caddy.component';
+import { OrderComponent } from './order/order.component';
+import { ProductsComponent } from './products/products.component';
+import { ShopsComponent } from './shops/shops.component';
+import { UsersComponent } from './users/users.component';
+import { CategoriesComponent } from './categories/categories.component';
 
 const routes: Routes = [
   {
@@ -17,10 +23,37 @@ const routes: Routes = [
     component: HomeComponent ,
     children:[
       {
-        path:"e",
-        component: LoginComponent,
+        path:"",
+        component:HomePageComponent,
+      },
+      {
+        path:"caddy",
+        component: CaddyComponent,
+      },
+      {
+        path:"order",
+        component: OrderComponent,
+      },
+      {
+        path:"detail",
+        component: DetailProductComponent,
+      },
+      {
+        path:"products",
+        component: ProductsComponent,
+      },
+      {
+        path:"shops",
+        component: ShopsComponent,
+      },
+      {
+        path:"users",
+        component: UsersComponent,
+      },
+      {
+        path:"categories",
+        component: CategoriesComponent,
       }
-
     ]
   },
   {
@@ -29,28 +62,14 @@ const routes: Routes = [
   },
   {
     path:"dashboard", canActivate: [AuthentificationGuard],
-    component: DashboardComponent,
-    children:[
-      {
-        path:"e",
-        component: LoginComponent ,
-      }
-
-    ]
-  },
-  {
-    path:"registe",
-    component: FooterComponent 
+    component: DashboardComponent
+  
   },
   {
     path:"register",
     component: RegisterComponent 
   },
-  {
-    path:"detail",
-    component: DetailProductComponent 
-  }
-  
+ 
 ];
 
 @NgModule({

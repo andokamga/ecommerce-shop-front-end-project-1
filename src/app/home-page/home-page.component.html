@@ -1,7 +1,25 @@
-<div class=" container">
-    <div class="row mt">
-        <div class="col-md-2">
-            <div class="panel panel-info">
+<!--<app-header [(search)]="search" [(isHome)]="isHome" [(currentShops)]="currentShops"></app-header>-->
+<div [ngClass]="!isAuthentificated?'container':''">
+    <div [ngClass]="!isAuthentificated?'row mt':'row'">
+        <div *ngIf="!isAuthentificated" class="col-md-2 col-xs-3 col-sm-2 col-lg-2">
+          <div class="panel-group" id="accordion1">
+            <div class="panel panel-info" *ngFor="let m of menu">
+              <div class="panel-heading " id="menu{{m.id}}">
+                <h2 class="panel-title text-center">
+                  <button class="btn bg-info" data-toggle="collapse" [attr.data-target]="'#collapse'+m.id" data-parent="#accordion1">
+                    <i class="{{m.icon}} text-primary"></i>&nbsp;
+                    <strong>{{m.title}} </strong>        
+                  </button>
+                </h2>
+              </div>
+              <div id="collapse{{m.id}}" class="panel-collapse collapse" [attr.aria.labelledby]="'menu'+m.id" >
+                <div class="panel-body text-center clickable" [ngClass]="m.title!+sousMenu.id ==collapseValue?'bg-primary':''"  *ngFor="let sousMenu of m.sousMenu" (click)="navigateById(m.title!,sousMenu.id!)">
+                  <i class=""  ></i>&nbsp;{{sousMenu.title}}
+                </div>
+              </div>
+             </div>
+            </div>
+            <!--<div class="panel panel-info">
                 <div class="panel-heading text-center"><strong>products filter</strong></div>
                 <div class="panel-body">
                   <div>
@@ -25,19 +43,47 @@
                     </div>
                   </div>
                 </div>
-              </div>
+              </div>-->
         </div>
-        <div class="col-md-10">
+        <div [ngClass]="!isAuthentificated?'col-md-10 col-xs-9 col-sm-10 col-lg-10':'mg'">
+          <div class="panel panel-default" *ngIf="currentShops">
+            <div class="panel-body">
+              <ul class="nav nav-pills">
+                <li  *ngFor="let shop of currentShops" [ngClass]="shop==currentShop?'active':''" (click)="onChangeShop(shop,0)">
+                  <a class="btn">{{shop.shopName}}</a>
+                </li>
+              </ul>
+            </div>
+        </div> 
             <div class="panel panel-info">
-                <div class="panel-heading text-center "> <strong>set of product of {{products?.content[0].shop.shopName}} shop</strong></div>
+                <div class="panel-heading text-center "> <strong><i class="fa fa-shopping-bag text-primary"></i>&nbsp;&nbsp;Set of product of {{products?.content[0].shop.shopName}} shop</strong></div>
                 <div class="panel-body">
                   <div class="row" *ngIf="products">
                     <div *ngFor="let product of products.content">
-                      <div class="col-md-6">
+                      <div class="col-md-6 col-xs-12 col-sm-12 col-lg-6">
                         <div class="panel panel-info">
                           <div class="panel-heading text-center"><strong>{{product.productName}}</strong></div>
                           <div class="panel-body">
-                            <img src="{{productService.host+'/api/products/image/'+product.idProduct}}" class="img-rounded clickable"/>
+                            <h1><span class=" label label-danger prix">{{product.productPrice}}&nbsp;Fafc</span></h1>
+                            <img src="{{productService.host+'/api/products/image/'+product.idProduct}}" class="img-rounded clickable" (click)="onProductDetails(product)"/>
+                          </div>
+                          <div class="panel-footer text-center bg-info">
+                            <div class="row">
+                              <div class="col-md-3 col-xs-3 col-sm-3 col-lg-3">
+                                <button class="btn btn-secondary border">&nbsp; &nbsp; &nbsp;
+                                  <i class="fa fa-thumbs-o-up"></i>&nbsp; Like &nbsp; &nbsp; &nbsp;  
+                                </button>
+                              </div>
+                              <div  class="col-md-9 col-xs-9 col-sm-9 col-lg-9">
+                                <form #f="ngForm">
+                                  <button class="btn btn-secondary border" (click)="onAddProductToCaddy(product)">&nbsp; 
+                                    <i class="fa fa-shopping-cart"></i>&nbsp; Add to cart &nbsp; 
+                                  </button>
+                                  <label class="control-label">&nbsp;Quantity:&nbsp;</label>
+                                  <input class="border" type="number" name="quantity" [(ngModel)] ="product.quantity" ngModel style="width: 50px">
+                                </form>
+                              </div>
+                            </div>
                           </div>
                         </div>
                       </div>

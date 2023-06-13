@@ -1,0 +1,206 @@
+<div class="panel {{panelStyle}} col-md-offset-4 col-md-4" *ngIf="mode==0">
+    <form [formGroup]="clientFormGroup" (ngSubmit)="onSaveClient()">
+      <div class="form-group">
+        <label class="control-label">Name:</label>
+        <input type="text" formControlName="name"  class="form-control">
+      </div>
+      <div class="form-group">
+        <label class="control-label">Address:</label>
+        <input type="text" formControlName="address" class="form-control">
+        <div class="form-group">
+          <label class="control-label">Phone number:</label>
+          <input type="text" formControlName="phoneNumber" class="form-control">
+        </div>
+  
+        <div class="form-group">
+          <label class="control-label">Email:</label>
+          <input type="text" formControlName="email" class="form-control">
+        </div>
+        <button type="submit" class="btn btn-primary">Next</button>
+      </div>
+    </form>
+</div>
+<div class="panel {{panelStyle}}" *ngIf="mode==1">
+    <div class="panel-heading text-center">Récap de votre commande</div>
+    <div class="panel-body">
+      <div class="col-md-5">
+        <div class="form-group">
+          <strong>Client name:</strong>
+          {{orderService.order.client.name}}
+        </div>
+        <div class="form-group">
+          <label>Adresse Client :</label>
+          {{orderService.order.client.address}}
+        </div>
+        <div class="form-group">
+          <label>Tel Client:</label>
+          {{orderService.order.client.phoneNumber}}
+        </div>
+        <div class="form-group">
+          <label>Email:</label>
+          {{orderService.order.client.email}}
+        </div>
+      </div>
+      <!--<div class="col-md-5">
+        <div class="form-group">
+          <label>Order ID :</label>
+          <label>{{orderService.order.id}}</label>
+        </div>
+        <div class="form-group">
+          <label>Order Date :</label>
+          <label>{{orderService.order.date}}</label>
+        </div>
+      </div>-->
+  
+    </div>
+    <div class="panel-body">
+      <table class="table table-striped">
+        <thead class="bg-info">
+          <tr>
+            <th>ID</th>
+            <th>Désignation</th>
+            <th>Quantité</th>
+            <th>Prix</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of orderService.order.ordeLine let i= index">
+            <td>{{i+1}}</td><td>{{item.product.productName}}</td>
+            <td>{{item.quatity|number:'0.2'}}</td>
+            <td>{{item.price|number:'0.2'}}</td>
+          </tr>
+          <tr class="bg-info">
+            <td colspan="3">Total:</td>
+            <td class="text-danger"><strong>{{caddyService.getTotalCurrentCaddy()|number:'0.2'}}</strong></td>
+          </tr>
+        </tbody>
+      </table>
+      <button class="btn btn-success" (click)="onOrder()" *ngIf="!orderService.order.idOrde">Confirmer la commande</button>
+      <button class="btn btn-success" (click)="onPayOrder()" *ngIf="orderService.order.idOrde">Pay Order</button>
+    </div>
+</div>
+<div *ngIf="mode==3">
+  <div *ngIf="stetusAnswer" class="alert {{stetusAnswer}} alert-dismissible">
+    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+    <strong>{{stetusMessage}}</strong> 
+  </div>
+  <div class="col-md-12 text-center alert-success">
+    <h3><strong>List order of {{productService.currentShop?.shopName}}</strong></h3>
+  </div>
+  <div *ngFor="let order of shopOrder | paginate: { itemsPerPage: pageSize,currentPage:currentPage,totalItems:totalPages}">
+    <div *ngIf="shopOrder[0].idOrde==order.idOrde">
+      <div *ngFor="let monthData of resultData ; let i=index">
+        <div class="text-center">
+          <strong>{{monthData.date }}</strong>
+        </div>
+        <div >
+          <table class="table table-striped" >
+            <thead class="">
+              <tr>
+                <th><input type="checkbox" (change)="checkAllCheckBox($event,monthData.date)" [(ngModel)]="monthData.checked"></th>
+                <th>ID</th><th>Nom</th><th>Date</th><th>status</th>
+              </tr>
+            </thead>
+            <tbody >
+              <tr *ngFor="let order of monthData.orders">
+                <td><input type="checkbox" value="{{order.idOrde}}" (change)="onChange($event,monthData.date)" [(ngModel)]="order.checked"></td>
+                <td >{{order.idOrde}}</td>
+                <td>{{order.name}}</td>
+                <td>{{order.orderDate}}</td>
+                <td>{{order.status}}</td>
+                <td>
+                  <button class="btn btn-info"><i class="fa fa-newspaper-o"></i></button>
+                </td>
+                <td>
+                  <button class="btn btn-warning" [disabled]="order.status=='NOPAID'" (click)="getPrintOrder(order.idOrde)"><i class="fa fa-print"></i></button>
+                </td>
+                <td>
+                  <button class="btn btn-danger " data-toggle="modal" data-target="#myModal"> <i class="fa fa-trash-o"></i></button>
+                  <div id="myModal" class="modal fade" role="dialog">
+                      <div class="modal-dialog">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title">delete shop order</h4>
+                          </div>
+                          <div class="modal-body">
+                            <p>do you really want to remove this order?</p>
+                          </div>
+                          <div class="modal-footer">
+                            <button type="submit" class="btn btn-success" data-dismiss="modal" (click)="onDeleteOrder(order.idOrde)">Delete</button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="text-center alert-success">
+    <button class="btn btn-danger " [ngClass]="!checkIFBoxChecke?'disabled':''"  (click)="deleteAllSeleterOrder()" data-toggle="modal" data-target="#myModal2"><i class="fa fa-trash-o"></i>&nbsp;Delete All selected</button>
+  </div>
+  <br>
+  <pagination-controls class="text-center" previousLabel="Prev" nextLabel="Next" [responsive]="true" [maxSize]="6" (pageChange)="handlePageChange($event)"></pagination-controls>
+  <br>
+</div>
+<div *ngIf="mode==4">
+  <div *ngIf="stetusAnswer" class="alert {{stetusAnswer}} alert-dismissible">
+    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+    <strong>{{stetusMessage}}</strong> 
+  </div>
+  <div class="col-md-12 text-center alert-success">
+    <h3><strong>List order of {{productService.currentShop?.shopName}}</strong></h3>
+  </div>
+  <div>
+    <table class="table table-striped" >
+      <thead class="">
+        <tr>
+          <!--<th><input type="checkbox" [checked]="isAllCheckBoxChecked()" (change)="checkAllCheckBox($event)"></th>-->
+          <th>ID</th><th>Nom</th><th>Date</th><th>status</th>
+        </tr>
+      </thead>
+      <tbody *ngIf="shopOrder">
+        <tr *ngFor="let order of shopOrder | paginate: { itemsPerPage: pageSize,currentPage:currentPage }">
+          <!--<td><input type="checkbox" value="{{p.id}}" [(ngModel)]="products[i].checked"></td>-->
+          <td >{{order.idOrde}}</td>
+          <td>{{order.name}}</td>
+          <td>{{order.orderDate}}</td>
+          <td>{{order.status}}</td>
+          <td>
+            <button class="btn btn-info"><i class="fa fa-newspaper-o"></i></button>
+          </td>
+          <td>
+            <button class="btn btn-warning" (click)="getPrintOrder(order.idOrde)"><i class="fa fa-print"></i></button>
+          </td>
+          <td>
+            <button class="btn btn-danger " data-toggle="modal" data-target="#myModal"> <i class="fa fa-trash-o"></i></button>
+            <div id="myModal" class="modal fade" role="dialog">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <button type="button" class="close" data-dismiss="modal">&times;</button>
+                      <h4 class="modal-title">delete shop order</h4>
+                    </div>
+                    <div class="modal-body">
+                      <p>do you really want to remove this order?</p>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="submit" class="btn btn-success" data-dismiss="modal" (click)="onDeleteOrder(order.idOrde)">Delete</button>
+                      <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <pagination-controls class="text-center" previousLabel="Prev" nextLabel="Next" [responsive]="true" [maxSize]="6" (pageChange)="handlePageChange($event)"></pagination-controls>
+  </div>
+</div>
+

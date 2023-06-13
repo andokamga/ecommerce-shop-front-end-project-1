@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { UserApp } from '../model/user.model';
 import { AuthentificationService } from '../services/authentification.service';
+import { CaddyService } from '../services/caddy.service';
 
 @Component({
   selector: 'app-home',

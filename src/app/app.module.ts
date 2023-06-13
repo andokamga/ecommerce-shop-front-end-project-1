@@ -1,8 +1,15 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import {  FormsModule } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
+import { NgxPaginationModule } from 'ngx-pagination';
+import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import {MatInputModule} from '@angular/material/input';
+import {MatSelectModule} from '@angular/material/select';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatButtonModule} from '@angular/material/button';
+import {MatProgressBarModule} from '@angular/material/progress-bar';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -16,6 +23,15 @@ import { DetailProductComponent } from './detail-product/detail-product.componen
 import { CaddyComponent } from './caddy/caddy.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { MenuComponent } from './menu/menu.component';
+import { WelcomeComponent } from './welcome/welcome.component';
+import { OrderComponent } from './order/order.component';
+import { PaymentComponent } from './payment/payment.component';
+import { ProductsComponent } from './products/products.component';
+import { UsersComponent } from './users/users.component';
+import { CategoriesComponent } from './categories/categories.component';
+import { ShopsComponent } from './shops/shops.component';
+import { MatOptionModule } from '@angular/material/core';
+import { InterceptorInterceptor } from './interceptor/interceptor.interceptor';
 
 @NgModule({
   declarations: [
@@ -29,16 +45,37 @@ import { MenuComponent } from './menu/menu.component';
     DetailProductComponent,
     CaddyComponent,
     DashboardComponent,
-    MenuComponent
+    MenuComponent,
+    WelcomeComponent,
+    OrderComponent,
+    PaymentComponent,
+    ProductsComponent,
+    UsersComponent,
+    CategoriesComponent,
+    ShopsComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
     ReactiveFormsModule,
-    FormsModule
+    FormsModule,
+    NgxPaginationModule,
+    BrowserAnimationsModule,
+    MatInputModule,
+    MatSelectModule,
+    MatFormFieldModule,
+    MatOptionModule,
+    MatButtonModule,
+    MatProgressBarModule
   ],
-  providers: [],
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: InterceptorInterceptor,
+      multi: true
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

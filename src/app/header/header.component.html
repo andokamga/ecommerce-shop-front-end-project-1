@@ -1,5 +1,5 @@
  <nav class="navbar navbar-inverse navbar-fixed-top ">
-    <div class="container-fluid navbar-fixed-top">
+    <div class="container-fluid ">
       <div class="navbar-header">
         <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
           <span class="icon-bar"></span>
@@ -10,8 +10,8 @@
       </div>
       <div  class="collapse navbar-collapse" id="myNavbar">
         <ul  class="nav navbar-nav">
-          <li ><a class="fa fa-home icon clickable" (click)="backHome()"><strong>home</strong></a></li>
-          <li class="nav-item dropdown">
+          <li ><a class="fa fa-home icon clickable" (click)="backHome()"><strong>&nbsp;Home</strong></a></li>
+          <!--<li class="nav-item dropdown">
             <a class="nav-link clickable" data-toggle="dropdown" data-bs-toggle="dropdown" (click)="onGetTown()"><strong>Town</strong>
             <span class="caret"></span></a>
             <ul class="dropdown-menu" *ngIf="town">
@@ -24,7 +24,7 @@
             <ul class="dropdown-menu" *ngIf="shops">
                   <li><a class="clickable dropdown-item" *ngFor="let shop of shops" (click)="onGetProduct(shop)" >{{shop.shopName}}</a></li>
             </ul>
-          </li>
+          </li>-->
         </ul>
         <form  class="navbar-form navbar-left"  (ngSubmit)=" onSearch()">
           <div class="input-group">
@@ -37,17 +37,25 @@
           </div>
         </form>
         <ul class="nav navbar-nav navbar-right" *ngIf="!isAuthetificated">
-          <li><a routerLink="register" href="#"><span class="glyphicon glyphicon-user "></span><strong>Sign Up</strong></a></li>
-          <li><a routerLink="login" href="#"><span class="glyphicon glyphicon-log-in"></span><strong> Login</strong></a></li>
+         <!-- <li><a routerLink="register" href="#"><span class="glyphicon glyphicon-user "></span><strong>&nbsp;Sign Up</strong></a></li> -->
+          <li><a routerLink="login" href="#"><span class="glyphicon glyphicon-log-in"></span><strong>&nbsp;Login</strong></a></li>
         </ul>
         <ul class="nav navbar-nav navbar-right" *ngIf="isAuthetificated">
           <li >
             <a routerLink="register" href="#" *ngIf="userApp" >
-              <img class="img-circle img" src="assets/images/unknown.jpg" width="26"> 
-              <strong>&nbsp;{{userApp.userName}}</strong>
+              <img class="img-circle img" src="assets/images/unknown.jpg" width="25"> 
+              <strong> {{onGreting()}}&nbsp;{{userApp.userName}}</strong>
             </a>
           </li>
           <li><a (click)="handLogout()"><span class="fa fa-sign-out icon clickable"></span></a></li>
+        </ul>
+        <ul class=" nav navbar-nav pull-right ">
+          <li>
+            <a routerLink="/caddy">
+              <span class="badge"> {{currentCaddyName}} | {{currentSize}}</span>
+              <img class="img-circle img " src="assets/images/caddy.PNG" width="25">
+            </a>
+          </li>
         </ul>
       </div>
     </div>

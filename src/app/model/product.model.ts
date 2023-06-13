@@ -11,6 +11,7 @@ export class Product{
     public available!:boolean;
     public like!: boolean
     public unLike!: boolean
+    public quantity!: number;
     public productQuantity!: number
     public shop!: Shop;
     public category!: Category;

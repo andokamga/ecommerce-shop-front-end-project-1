@@ -1,0 +1,23 @@
+.mt{
+    margin-top: 75px;
+  }
+  img{
+    width: 100%;
+    height: 400px;
+}
+.prix{
+    margin-top: -1px;
+    position: absolute;
+    right: 50px;
+  }
+  .nim-height{
+    min-height: 300px;
+  }
+  .border{
+    border-style:groove;
+    border: 1px solid;
+    border-radius: 40px;
+}
+.mt1{
+  margin-top: 16px;
+}
