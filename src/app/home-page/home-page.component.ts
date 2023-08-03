@@ -12,6 +12,7 @@ import { ShopService } from '../services/shop.service';
 import { Town } from '../model/town.model';
 import { Category } from '../model/category.model';
 import { Shop } from '../model/shop.model';
+import { HttpEventType, HttpResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-home-page',
@@ -85,6 +86,11 @@ export class HomePageComponent implements OnInit, OnChanges {
     }
     this.initMenuShop();
   }
+  ngAfterViewInit() {
+    setTimeout(() => {
+      this.progressBar = 0;
+    }, 3000);
+  }
   ngOnChanges(changes: SimpleChanges): void {
     console.log("dificile")
     if(changes['search'] && changes['search'].currentValue ){
@@ -104,6 +110,7 @@ export class HomePageComponent implements OnInit, OnChanges {
     }
   }
   onSearchProduct(search:string,page:number){
+      this.isLoadingP=true;
       this.urlData.page=page;
       this.urlData.idShop= this.currentShop.idShop;
       this.urlData.search = search;
@@ -117,7 +124,7 @@ export class HomePageComponent implements OnInit, OnChanges {
         this.pages = new Array(this.totalPages);
       });
   }
-  homeShopProduct(){
+  /*homeShopProduct(){
     this.productService.getProductHome(this.urlData)
         .subscribe((data)=>{
           this.products = data;
@@ -132,6 +139,39 @@ export class HomePageComponent implements OnInit, OnChanges {
           this.getShopCat();
     this.getShopBrand();
    });
+  }*/
+  homeShopProduct(){
+    this.progressBar=0;
+    this.productService.getProductHome(this.urlData).subscribe({
+      next: (event)=>{
+        if (event.type == HttpEventType.UploadProgress) {
+          this.progressBar = Math.round(100 * event.loaded / event.total!);
+        } else if (event instanceof HttpResponse) {
+          //console.log(this.router.url);
+          //this.getProducts(this.currentRequest);
+          //this.refreshUpdatedProduct();
+          //this.currentTime=Date.now();
+        }
+        if (event.type == HttpEventType.Response) {
+          const responseData = event.body;
+          this.products=responseData;
+          console.log(responseData)
+          this.currentShop = this.products.content[0].shop;
+          //this.currentShops = this.products.content[0].shop;
+          this.currentShopsChange.emit(this.currentShops);
+          this.pageSize= this.products.numberOfElements;
+          this.currentPage = this.products.number;
+          this.totalPages = this.products.totalPages;
+          this.pages = new Array(this.totalPages);
+          this.getShopCat();
+          this.getShopBrand();
+        }
+      },
+      error: (err)=>{
+        
+      }     
+   });
+   this.progressBar=0
   }
   onBackHomeShop(){
     this.urlData.page=0;
@@ -149,10 +189,14 @@ export class HomePageComponent implements OnInit, OnChanges {
     });
   }
   onChangeShop(shop:any,page:number){
+    this.isLoadingP=true;
     this.urlData.idShop= shop.idShop;
     this.urlData.page=page;
       this.productService.getShopProduct(this.urlData)
         .subscribe((data)=>{
+          setTimeout(() => {
+            this.isLoadingP=false;
+          }, 2000);
           this.currentShop = shop;
           //this.currentShop = this.currentShops.idShop;
           this.currentBrand = undefined;
@@ -221,11 +265,15 @@ export class HomePageComponent implements OnInit, OnChanges {
     }
   }
   changeShopPage(idShop:number,page:number){
+    this.isLoadingP=true;
     this.urlData.idShop= idShop;
     this.urlData.page=page;
     
       this.productService.getShopProduct(this.urlData)
         .subscribe((data)=>{
+          setTimeout(() => {
+            this.isLoadingP=false;
+          }, 2000);
           this.currentBrand = undefined;
           this.currentCat = undefined;
           this.search = '';
@@ -237,6 +285,7 @@ export class HomePageComponent implements OnInit, OnChanges {
       });
   }
   onGetProductByCategory(idShop:any,idCategory:any,page:number){
+    this.isLoadingP=true;
     this.urlData.page = page;
     this.urlData.idShop=idShop;
     this.urlData.idCat=idCategory;
@@ -253,10 +302,14 @@ export class HomePageComponent implements OnInit, OnChanges {
           this.currentPage = this.products.number;
           this.totalPages = this.products.totalPages;
           this.pages = new Array(this.totalPages);
+          setTimeout(() => {
+            this.isLoadingP=false;
+          }, 2000);
           console.log(data); 
         });
   }
   onGetProductByBrand(idShop:any,idBrand:any,page:number){
+    this.isLoadingP=true;
     this.urlData.page = page;
     this.urlData.idShop=idShop;
     this.urlData.idCat=idBrand;
@@ -268,6 +321,9 @@ export class HomePageComponent implements OnInit, OnChanges {
     this.searchChange.emit(this.search);
     this.productService.getProductByBrand(this.urlData)
         .subscribe((data)=>{
+          setTimeout(() => {
+            this.isLoadingP=false;
+          }, 2000);
           this.products=data;
           this.currentPage = this.products.number;
           this.totalPages = this.products.totalPages;
@@ -392,4 +448,13 @@ export class HomePageComponent implements OnInit, OnChanges {
   public set shopBrand(shopBrand:any){
     this.productService.shopBrand=shopBrand;
   } 
+  public set progressBar(progress:number){
+    this.productService.progressBar=progress;
+  } 
+  public set isLoadingP(isLoading:boolean){
+    this.productService.isLoadingP=isLoading;
+  } 
+  public get isLoadingP():any{
+    return this.productService.isLoadingP; 
+  }
 }

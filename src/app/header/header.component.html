@@ -1,4 +1,10 @@
  <nav class="navbar navbar-inverse navbar-fixed-top ">
+  <div class="" *ngIf="progressBar!=0">
+    <mat-progress-bar class="progress-bar" mode="determinate" [value]="progressBar" *ngIf="progressBar" color="Primary"></mat-progress-bar>
+  </div>
+  <div *ngIf="isLoading">
+    <mat-progress-bar mode="query" color="Accent"></mat-progress-bar>
+  </div>
     <div class="container-fluid ">
       <div class="navbar-header">
         <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
@@ -10,7 +16,7 @@
       </div>
       <div  class="collapse navbar-collapse" id="myNavbar">
         <ul  class="nav navbar-nav">
-          <li ><a class="fa fa-home icon clickable" (click)="backHome()"><strong>&nbsp;Home</strong></a></li>
+          <li ><a class="fa fa-home icon clickable" (click)="backHome()"><strong>&nbsp;{{"Home"|translate}}</strong></a></li>
           <!--<li class="nav-item dropdown">
             <a class="nav-link clickable" data-toggle="dropdown" data-bs-toggle="dropdown" (click)="onGetTown()"><strong>Town</strong>
             <span class="caret"></span></a>
@@ -28,7 +34,7 @@
         </ul>
         <form  class="navbar-form navbar-left"  (ngSubmit)=" onSearch()">
           <div class="input-group">
-            <input type="text" name="search" ngModel required class="form-control" placeholder="Search products" [(ngModel)]="search">
+            <input type="text" name="search" ngModel required class="form-control" placeholder="Search products" [(ngModel)]="search" (input)="currentSearch()" >
             <div class="input-group-btn">
               <button class="btn btn-default" type="submit ">
                 <i class="glyphicon glyphicon-search"></i>

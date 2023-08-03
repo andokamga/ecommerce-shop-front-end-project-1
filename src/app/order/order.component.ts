@@ -13,6 +13,10 @@ import { PageOrientation } from 'pdfmake/interfaces';
 import { ProductService } from '../services/product.service';
 import { UrlData } from '../model/urlData.modul';
 import { Order } from '../model/order.model';
+import { DialogConfirmationComponent } from '../order/dialog-confirmation/dialog-confirmation.component';
+import { MatDialog } from '@angular/material/dialog';
+import { Body } from '../model/body.model';
+import { Payer } from '../model/payer.model';
 (<any>pdfMake).vfs = pdfFonts.pdfMake.vfs;
 @Component({
   selector: 'app-order',
@@ -33,6 +37,7 @@ export class OrderComponent implements OnInit {
   infoBill!:any
   item!:any
   checkIFBoxChecke:boolean=false
+  currentOrder!:Order
   shopOrder:Array<Order>=[];
   selectedOrders:Order[]=[];
   constructor(private router:Router,
@@ -41,7 +46,8 @@ export class OrderComponent implements OnInit {
               public caddyService:CaddyService,
               public activatedRoute:ActivatedRoute,  
               private authService:AuthentificationService,
-              public orderService:OrderService,) { }
+              public orderService:OrderService,
+              public dialog: MatDialog) { }
 
 ngOnInit() {
   if(!this.authService.isAuthetificated()){
@@ -65,11 +71,13 @@ ngOnInit() {
     }
     );
   }
-  if(this.activatedRoute.snapshot.queryParamMap.get("mode")!=undefined){
-    this.mode=3;
-    
+  if(this.activatedRoute.snapshot.queryParamMap.get("mode")=='3'){
+    this.mode=3; 
+    this.getShopOrder(0);
+  }else if(this.activatedRoute.snapshot.queryParamMap.get("mode")=='4'){
+    this.mode=4;
+    this.getClientOrder(0);
   }
-  this.getShopOrder(0);
 }
 public onSaveClient() {
   let client=new Client();
@@ -83,6 +91,20 @@ public onSaveClient() {
   this.mode=1;
 }
 public onOrder() {
+  this.orderService.submitOrder().subscribe({
+    next:(orde)=>{
+      this.currentOrder=orde;
+      this.stetusMessage="the order was successful"
+      this.stetusAnswer="alert-warning"
+    console.log(orde)
+    },
+    error:(err)=>{
+      this.stetusMessage="bad credantials"
+      this.stetusAnswer="alert-danger"
+      this.errorMessage = err.error.message || err.error || err.message;;
+      console.log(this.errorMessage)
+    }
+  })
   this.orderService.submitOrder().subscribe (data=>{
     //this.orderService.order.idOrde=data.content[1];
     this.panelStyle="panel-success";
@@ -90,7 +112,35 @@ public onOrder() {
     console.log(err);
   }*/);
 }
+public payOrderByMTN(order:Order){
+  let body:Body = new Body();
+  let payer:Payer = new Payer();
+  payer.partyId="23768565895";
+  body.amount="100";
+  body.currency="EUR";
+  body.externalId="45";
+  payer.partyId="23768565895";
+  payer.partyIdType="MSISDN";
+  body.payer=payer;
+  body.payerMessage="your want to pay item shop fcfa";
+  body.payeeNote="l4kl";
 
+  this.orderService.payOrderByMTN(order.idOrde, body).subscribe({
+    next:(orde)=>{
+      this.stetusMessage="your payement was successful"
+      this.stetusAnswer="alert-warning"
+      console.log(orde)
+    },
+    error:(err)=>{
+      console.log("mal")
+      this.stetusMessage="bad credantials"
+      this.stetusAnswer="alert-danger"
+      this.errorMessage = err.error.message || err.error || err.message;;
+      console.log(err)
+    }
+  })
+
+}
 onPayOrder() {
   this.router.navigateByUrl("/payment/"+this.orderService.order.idOrde);
 }
@@ -284,6 +334,30 @@ public getShopOrder(page:number){
     }
   })
 }
+public getClientOrder(page:number){
+  let  urlData= new UrlData()
+  urlData.idShop=this.currentShop.idShop;
+  urlData.size=10;
+  urlData.page=page;
+  urlData.idUser=this.authService.authentificatedUser?.idUserApp;
+  this.orderService.getClientOrder(urlData).subscribe({
+    next:(order)=>{
+      this.shopOrder = order.content;
+      this.currentPage = order.number+1;
+      this.pageSize = order.size;
+      this.totalPages = order.totalElements;
+      this.groupOrderByDate();
+      console.log(order.content)
+      console.log(order.size)
+    },
+    error:(err)=>{
+      this.stetusMessage="bad credantials"
+      this.stetusAnswer="alert-danger"
+      this.errorMessage = err.error.message || err.error || err.message;;
+      console.log(this.errorMessage)
+    }
+  })
+}
 public onDeleteOrder(id:number){
   this.orderService.deleteOrder(id).subscribe({
     next:(res)=>{
@@ -345,6 +419,7 @@ public checkAllCheckBox(event:any,date:string){
   })
 }
 public deleteAllSeleterOrder(){
+  this.openDialog();
   this.selectedOrders = this.shopOrder.filter(i => i.checked == true);
   console.log(this.selectedOrders);
 }
@@ -353,6 +428,17 @@ public get currentShop():any{
 }
 public handlePageChange(event: number){
   this.shopOrder=[];
-  this.getShopOrder(event-1);
+  if(this.mode==3){
+    this.getShopOrder(event-1);
+  }else{
+    this.getClientOrder(event-1);
+  }
 }
+public set progressBar(progress:number){
+  this.productService.progressBar=progress;
+} 
+openDialog() {
+  this.dialog.open(DialogConfirmationComponent);
+}
+
 }

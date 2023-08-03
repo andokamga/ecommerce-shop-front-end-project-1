@@ -21,12 +21,23 @@ export class ProductService {
   public currentBrand = undefined;
   public currentProduct:any;
   public search!:string;
+  public progressBar!:number|undefined;
+  public isLoading!: boolean;
+  public isLoadingP!: boolean;
   public host:String= "http://localhost:8080";
   constructor(private http: HttpClient) {
     
   }
-  public  getProductHome(urlData:UrlData){
+  /*public  getProductHome(urlData:UrlData){
     return this.http.post(this.host+"/api/products/home",urlData);
+  }*/
+  public  getProductHome(urlData:UrlData):Observable<HttpEvent<{}>>{
+    const req = new HttpRequest('POST', this.host+"/api/products/home", urlData, {
+      reportProgress: true,
+      //responseType: 'text'
+    });
+
+    return this.http.request(req);
   }
   public getShopCat(idShop:any){
     return this.http.get<Array<Category>>(this.host+"/api/products/categories/"+idShop);

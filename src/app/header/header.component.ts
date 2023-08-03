@@ -74,6 +74,24 @@ export class HeaderComponent implements OnInit {
     });
     console.log(this.search);
   }
+
+  public currentSearch(){
+    this.urlData.page=0;
+    this.urlData.idShop= this.currentShop.idShop;
+    this.urlData.search = this.search;
+    console.log("bien")
+    this.productService.getProductByFilter(this.urlData)
+      .subscribe((data)=>{
+        this.products=data;
+        this.currentBrand = undefined;
+        this.currentCat = undefined;
+      });
+      this.router.navigate([''],{queryParams:{search:this.search},
+      skipLocationChange:false
+    });
+    console.log(this.search);
+  }
+
   backHome(){
     console.log('bjr');
     this.homePage.changeShopPage(this.currentShop.idShop,0);
@@ -205,5 +223,11 @@ export class HeaderComponent implements OnInit {
   }
   public get currentSize(){
     return this.caddyService.getSize();
+  }
+  public get progressBar(){
+    return this.productService.progressBar;
+  } 
+  public get isLoading():any{
+    return this.productService.isLoadingP; 
   }
 }

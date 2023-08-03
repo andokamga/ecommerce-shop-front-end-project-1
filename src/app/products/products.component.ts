@@ -292,4 +292,7 @@ export class ProductsComponent implements OnInit {
       });
     }
   }
+  public set progressBar(progress:number){
+    this.productService.progressBar=progress;
+  } 
 }

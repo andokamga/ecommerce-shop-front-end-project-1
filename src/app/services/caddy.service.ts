@@ -71,6 +71,11 @@ export class CaddyService {
     //localStorage.setItem("myCaddies",JSON.stringify(Array.from(this.caddies.entries())));
     //localStorage.setItem("myCaddies",JSON.stringify(this.caddies));
   }
+  public updateItemQuantity(itemProduct:ItemProduct){
+    this.saveCaddiesToLocalStorage()
+    //this.getCaddiesToLocalStorage();
+    itemProduct.price = itemProduct.product.productPrice*itemProduct.quatity;
+  }
   public deleteProductToCaddy(itemProduct:ItemProduct){
     let caddy = this.caddies.get(this.currentCaddyName);
     //delete caddy?.items[caddy?.items.indexOf(itemProduct)];

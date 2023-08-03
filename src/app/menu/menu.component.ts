@@ -167,8 +167,12 @@ public homePage:HomePageComponent = new HomePageComponent(this.productService,th
  }
  public navigateByUrl(url:any,id:number){
   this.currentSousMenu = id;
-  if(url=="order"){
+  if(url=="order"&&id==54){
     this.router.navigate(['order'],{queryParams:{mode:"3"},
+    skipLocationChange:true
+    });
+  }else if(url=="order"&&id==21){
+    this.router.navigate(['order'],{queryParams:{mode:"4"},
     skipLocationChange:true
     });
   }else{

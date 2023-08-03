@@ -35,7 +35,9 @@ export class CaddyComponent implements OnInit {
   public onNewOrder() {
     this.router.navigateByUrl("/order");
   }
-
+  public changeQuatity(item:ItemProduct){
+    this.caddyService.updateItemQuantity(item);
+  }
   public onSelectCaddy(name:string) {
     this.currentCaddyName = name;
     this.currentCaddy=this.caddyService.getCaddy();

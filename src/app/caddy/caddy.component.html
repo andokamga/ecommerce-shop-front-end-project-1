@@ -26,7 +26,7 @@
               <tr *ngFor="let item of currentCaddy?.items let i= index">
                 <td *ngIf="item">{{i+1}}</td>
                 <td>{{item.product.productName}}</td>
-                <td>{{item.quatity}}</td>
+                <td> <input class="" type="number" name="quantity" [(ngModel)] ="item.quatity" (change)="changeQuatity(item)" ngModel style="width: 50px"> </td>
                 <td>{{item.price|number:'0.2'}} fcfa</td>
         
                 <td>
@@ -44,7 +44,9 @@
               </tr>
             </tbody>
           </table>
-          <button class="btn btn-success" (click)="onNewOrder()">Order</button>
+          <div class="text-right">
+            <button class="btn btn-success text-center" (click)="onNewOrder()">Order</button>
+          </div>
         </div>
       
     </div>

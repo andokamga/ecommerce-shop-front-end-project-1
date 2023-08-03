@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClient, HttpClientModule } from '@angular/common/http';
 import {  FormsModule } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { NgxPaginationModule } from 'ngx-pagination';
@@ -32,7 +32,15 @@ import { CategoriesComponent } from './categories/categories.component';
 import { ShopsComponent } from './shops/shops.component';
 import { MatOptionModule } from '@angular/material/core';
 import { InterceptorInterceptor } from './interceptor/interceptor.interceptor';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import {MatDialogModule} from '@angular/material/dialog';
+import { DialogConfirmationComponent } from './order/dialog-confirmation/dialog-confirmation.component';
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
+export function createTranslateLoader(httpClient:HttpClient){
+  return new TranslateHttpLoader(httpClient,'./assets/i18n/','.json');
+}
 @NgModule({
   declarations: [
     AppComponent,
@@ -52,7 +60,8 @@ import { InterceptorInterceptor } from './interceptor/interceptor.interceptor';
     ProductsComponent,
     UsersComponent,
     CategoriesComponent,
-    ShopsComponent
+    ShopsComponent,
+    DialogConfirmationComponent
   ],
   imports: [
     BrowserModule,
@@ -67,7 +76,16 @@ import { InterceptorInterceptor } from './interceptor/interceptor.interceptor';
     MatFormFieldModule,
     MatOptionModule,
     MatButtonModule,
-    MatProgressBarModule
+    MatProgressBarModule,
+    MatProgressSpinnerModule,
+    MatDialogModule,
+    TranslateModule.forRoot({
+      loader:{
+        provide: TranslateLoader,
+        useFactory: (createTranslateLoader),
+        deps:[HttpClient]
+      }
+    })
   ],
   providers: [
     {
